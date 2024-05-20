@@ -288,23 +288,42 @@ String campania = httpReq.getParameter("campania");
 				}
 			}
 			
-			console.log('test-lg: Inicia emplementacion');
 			
 			const idPasActuel = '<portlet:namespace />password';
 			const idApellidoLogId = '<portlet:namespace />apellidoLog';
-			console.log('test-lg: idPasActuel: ', idPasActuel);
-			console.log('test-lg: idApellidoLogId: ', idApellidoLogId);
 			
-			function inputMaskePress(event){
-				console.log('test-lg: en inputMaskePress');
-				if(event){
-					document.getElementById(idPasActuel).value = document.getElementById(idPasActuel).value + event.key
-				}
+			function isNumber(value) {
+			    return !isNaN(parseFloat(value)) && isFinite(value);
+			}
+			
+			function inputMaskeInput(event){
+			    if(event && event.data != null){
+			        let tecla = event.data;
+			        if(event.data.length > 1)
+			            tecla = event.data.substring(1, event.data.length)
+			        
+			        let adicionar = false;
+			        if(isNumber(tecla)){
+			            if(event.inputType == 'insertText'){
+			                adicionar = true;
+			            }if(event.data.length > 1 && event.inputType == 'insertCompositionText'){
+			                adicionar = true;
+			            }
+			        }else{
+			            adicionar = true;
+			        }
+			
+			        if(adicionar){
+			            document.getElementById(idPasActuel).value = document.getElementById(idPasActuel).value + tecla
+			        }
+			    }
 			}
 			
 			function inputMaskeUp(event){
-				console.log('test-lg: en inputMaskeUp');
 				if(event){
+			        if(document.getElementById(idApellidoLogId).value == ''){
+			            document.getElementById(idPasActuel).value = ''
+			        }
 					if(event.key == "Backspace" || event.key == "Delete"){
 						document.getElementById(idPasActuel).value = document.getElementById(idPasActuel).value.substring(0, document.getElementById(idApellidoLogId).value.length);
 					}else{
@@ -314,27 +333,22 @@ String campania = httpReq.getParameter("campania");
 				}
 			}
 			
-			console.log('test-lg: antes de adicionar los event listener');
 			const inputPs = document.getElementById(idApellidoLogId);
-			console.log('test-lg: inputPs: ', inputPs);
-			inputPs.addEventListener("keypress", inputMaskePress);
+			inputPs.addEventListener("input", inputMaskeInput);
 			inputPs.addEventListener("keyup", inputMaskeUp);
-			console.log('test-lg: despues de adicionar los event listener');
 		</aui:script>
 		<script>
 			$( ".data_update.modal_col.active" ).click(function() {
 				 $( ".data_update.modal_col.active" ).removeClass('active'); 
 			});
 			$( document ).ready(function() {
-				console.log('test-lg: en on ready antes de limpiar campos');
 				const idApellidoLogId = '<portlet:namespace />apellidoLog';
 				document.getElementById(idApellidoLogId).value = '';
 				
 				const idPasActuel = '<portlet:namespace />password';
 				document.getElementById(idPasActuel).value = '';
-				console.log('test-lg: en on ready despues de limpiar campos');
 			});
 		</script>
 	</c:otherwise>
 </c:choose>
-<!-- Version: 21-10-2022-12-00 -->
+<!-- Version: 21-10-2022-12-01 -->
